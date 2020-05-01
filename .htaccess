@@ -1,0 +1,13 @@
+Options -MultiViews
+RewriteEngine On
+
+#change the base when moving to another domain
+RewriteBase /body-monitor-api
+
+#redirect all API calls to the index.php
+RewriteRule ^API/(.*)$ index.php?url=$1 [QSA,NC,L]
+
+#let the VueJS router do it's thing
+RewriteCond %{REQUEST_FILENAME} !-f      
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.html [NC,L]
