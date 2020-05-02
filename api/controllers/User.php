@@ -12,7 +12,7 @@ class User extends Controller {
 			'login' => array(
 				'required_role' => self::PUBLIC_ACCESS,
 				'params' => array(
-					'email' => 'required',
+					'email' => array('required', 'valid-email'),
 					'password' => 'required'
 				)
 			),
@@ -27,7 +27,7 @@ class User extends Controller {
 				'params' => array(
 					'email' => array('valid-email', 'unique[email]', 'max-80'),
 					'password' => array('min-6', 'max-20', 'strong-password'),
-					'repeat_password' => 'matches[password]'
+					'repeatPassword' => 'matches[password]'
 				)
 			)
 		);
@@ -83,10 +83,10 @@ class User extends Controller {
 	public function signup() {
 		$user_model = $this->load_model('UserModel');
 		
-		$user_id = $user_model->insertUser($this->params['email'], $this->params['password']);
+		$user = $user_model->insertUser($this->params['email'], $this->params['password']);
 
-		if($user_id !== null){
-			$this->sendResponse(1, array('success' => true));
+		if($user !== null){
+			$this->sendResponse(1, array('success' => true, 'user' => $user));
 		}else{
 			$this->sendResponse(0, ErrorCodes::DB_ERROR);
 		}

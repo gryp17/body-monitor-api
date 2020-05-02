@@ -26,7 +26,7 @@ class UserModel {
 			unset($result['password']);
 			
 			//convert the dates to javascript friendly format
-			$result['registered'] = Utils::formatDate($result['register_date']);
+			$result['registered'] = Utils::formatDate($result['registered']);
 			
             return $result;
 		}else{
@@ -82,7 +82,32 @@ class UserModel {
 		);
 		
 		if($query->execute($params)){
-			return $this->connection->lastInsertId();
+			$user_id = $this->connection->lastInsertId();
+			return $this->getUser($user_id);
+		}else{
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the user data
+	 * @param int $id
+	 * @return array
+	 */
+	public function getUser($id){
+		$query = $this->connection->prepare('SELECT * FROM user WHERE id = :id');
+		$params = array('id' => $id);
+		$query->execute($params);
+
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+		
+        if ($result) {
+			unset($result['password']);
+			
+			//convert the dates to javascript friendly format
+			$result['registered'] = Utils::formatDate($result['registered']);
+
+            return $result;
 		}else{
 			return null;
 		}
