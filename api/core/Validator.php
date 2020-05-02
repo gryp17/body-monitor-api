@@ -59,6 +59,12 @@ class Validator {
 					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_INT);
 				}
 			}
+			#number rule (float or integer)
+			elseif ($rule == 'number') {
+				if (!is_numeric($value)) {
+					return array('field' => $field, 'error_code' => ErrorCodes::INVALID_NUMBER);
+				}
+			}
 			#date rule
 			elseif ($rule == 'date') {
 				if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {

@@ -13,6 +13,7 @@ class ErrorCodes {
 	const EMPTY_FIELD = 'empty_field';
 	const AT_LEAST_ONE_FIELD_REQUIRED =  'at_least_one_field_required';
 	const INVALID_INT = 'invalid_int';
+	const INVALID_NUMBER = 'invalid_number';
 	const INVALID_DATE = 'invalid_date';
 	const EXCEEDS_CHARACTERS_ = 'exceeds_characters_'; //exceeds_characters_(\d+)
 	const BELOW_CHARACTERS_ = 'below_characters_'; //below_characters_(\d+)

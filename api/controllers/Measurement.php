@@ -21,6 +21,14 @@ class Measurement extends Controller {
 					'name' => array('min-3', 'max-50'),
 					'type' => array('required', 'int')
 				)
+			),
+			'addMeasurementEntry' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'measurementId' => array('required', 'int'),
+					'date' => 'datetime',
+					'value' => 'number'
+				)
 			)
 		);
 
@@ -66,5 +74,28 @@ class Measurement extends Controller {
 			}
 		}
 
+	}
+
+	public function addMeasurementEntry() {
+		$measurement_model = $this->load_model('MeasurementModel');
+		$measurement_entry_model = $this->load_model('MeasurementEntryModel');
+		$measurement_id = $this->params['measurementId'];
+
+		$measurements = $measurement_model->getMeasurements($_SESSION['user']['id']);
+
+		//check if the measurementId is valid
+		$index = array_search($measurement_id, array_column($measurements, 'id'));
+
+		if ($index === false) {
+			$this->sendResponse(0, array('field' => 'measurementId', 'error_code' => ErrorCodes::EMPTY_FIELD));
+		} else {
+			$result = $measurement_entry_model->addMeasurementEntry($measurement_id, $this->params['date'], $this->params['value']);
+
+			if($result) {
+				$this->sendResponse(1, array('success' => true));
+			} else {
+				$this->sendResponse(0, ErrorCodes::DB_ERROR);
+			}
+		}
 	}
 }
