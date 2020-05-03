@@ -29,6 +29,9 @@ class Measurement extends Controller {
 					'date' => 'datetime',
 					'value' => 'number'
 				)
+			),
+			'getMeasurementEntries' => array(
+				'required_role' => self::LOGGED_IN_USER
 			)
 		);
 
@@ -97,5 +100,11 @@ class Measurement extends Controller {
 				$this->sendResponse(0, ErrorCodes::DB_ERROR);
 			}
 		}
+	}
+
+	public function getMeasurementEntries() {
+		$measurement_entry_model = $this->load_model('MeasurementEntryModel');
+		$data = $measurement_entry_model->getMeasurementEntries($_SESSION['user']['id']);
+		$this->sendResponse(1, $data);
 	}
 }

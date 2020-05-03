@@ -22,4 +22,22 @@ class MeasurementEntryModel {
 			return false;
 		}
 	}
+
+	public function getMeasurementEntries($user_id) {
+		$data = array();
+
+		$query = $this->connection->prepare('SELECT * FROM measurement_entry '
+			.'WHERE measurement_entry.measurement_id IN (SELECT id FROM measurement WHERE user_id = :user_id)');
+		$params = array('user_id' => $user_id);
+
+		$query->execute($params);
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			//convert the dates to javascript friendly format
+			$row['date'] = Utils::formatDate($row['date']);
+			$data[] = $row;
+		}
+
+		return $data;
+	}
 }
