@@ -27,7 +27,7 @@ class MeasurementEntryModel {
 		$data = array();
 
 		$query = $this->connection->prepare('SELECT * FROM measurement_entry '
-			.'WHERE measurement_entry.measurement_id IN (SELECT id FROM measurement WHERE user_id = :user_id)');
+			.'WHERE measurement_entry.measurement_id IN (SELECT id FROM measurement WHERE user_id = :user_id) ORDER BY date');
 		$params = array('user_id' => $user_id);
 
 		$query->execute($params);
