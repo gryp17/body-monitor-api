@@ -16,7 +16,8 @@ class MeasurementModel {
 	public function getMeasurements($user_id){
 		$data = array();
 
-		$query = $this->connection->prepare('SELECT * FROM measurement WHERE user_id = :user_id');
+		$query = $this->connection->prepare('SELECT M.id, M.name, M.unit_id, U.name as unit FROM measurement as M, measurement_unit as U ' 
+			.'WHERE M.unit_id = U.id AND user_id = :user_id');
 		$params = array('user_id' => $user_id);
 
 		$query->execute($params);
