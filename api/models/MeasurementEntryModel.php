@@ -23,6 +23,26 @@ class MeasurementEntryModel {
 		}
 	}
 
+	public function getMeasurementEntry($id) {
+		$query = $this->connection->prepare('SELECT * FROM measurement_entry WHERE id = :id');
+		$params = array('id' => $id);
+		$query->execute($params);
+
+		$result = $query->fetch(PDO::FETCH_ASSOC);
+		
+        if ($result) {
+            return $result;
+		}else{
+			return null;
+		}
+	}
+
+	public function deleteMeasurementEntry($id) {
+		$query = $this->connection->prepare('DELETE FROM measurement_entry WHERE id = :id');
+		$params = array('id' => $id);
+		return $query->execute($params);
+	}
+
 	public function getMeasurementEntries($user_id) {
 		$data = array();
 

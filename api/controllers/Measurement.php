@@ -30,6 +30,12 @@ class Measurement extends Controller {
 					'value' => 'number'
 				)
 			),
+			'deleteMeasurementEntry' => array(
+				'required_role' => self::LOGGED_IN_USER,
+				'params' => array(
+					'entryId' => array('required', 'int')
+				)
+			),
 			'getMeasurementEntries' => array(
 				'required_role' => self::LOGGED_IN_USER
 			)
@@ -99,6 +105,27 @@ class Measurement extends Controller {
 			} else {
 				$this->sendResponse(0, ErrorCodes::DB_ERROR);
 			}
+		}
+	}
+
+	public function deleteMeasurementEntry() {
+		$measurement_model = $this->load_model('MeasurementModel');
+		$measurement_entry_model = $this->load_model('MeasurementEntryModel');
+
+		$entry_record = $measurement_entry_model->getMeasurementEntry($this->params['entryId']);
+
+		if ($entry_record) {
+			$measurements = $measurement_model->getMeasurements($_SESSION['user']['id']);
+			$index = array_search($entry_record['measurement_id'], array_column($measurements, 'id'));
+
+			if ($index === false) {
+				$this->sendResponse(0, ErrorCodes::ACCESS_DENIED);
+			} else {
+				$measurement_entry_model->deleteMeasurementEntry($this->params['entryId']);
+				$this->sendResponse(1, array('success' => true));
+			}
+		} else {
+			$this->sendResponse(0, ErrorCodes::NOT_FOUND);
 		}
 	}
 
