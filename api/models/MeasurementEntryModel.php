@@ -17,9 +17,10 @@ class MeasurementEntryModel {
 		);
 
 		if($query->execute($params)){
-			return true;
+			$entry_id = $this->connection->lastInsertId();
+			return $this->getMeasurementEntry($entry_id);
 		}else{
-			return false;
+			return null;
 		}
 	}
 
@@ -31,6 +32,8 @@ class MeasurementEntryModel {
 		$result = $query->fetch(PDO::FETCH_ASSOC);
 		
         if ($result) {
+			//convert the dates to javascript friendly format
+			$result['date'] = Utils::formatDate($result['date']);
             return $result;
 		}else{
 			return null;

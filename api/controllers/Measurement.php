@@ -101,7 +101,7 @@ class Measurement extends Controller {
 			$result = $measurement_entry_model->addMeasurementEntry($measurement_id, $this->params['date'], $this->params['value']);
 
 			if($result) {
-				$this->sendResponse(1, array('success' => true));
+				$this->sendResponse(1, array('entry' => $result));
 			} else {
 				$this->sendResponse(0, ErrorCodes::DB_ERROR);
 			}
