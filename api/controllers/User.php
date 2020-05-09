@@ -82,10 +82,16 @@ class User extends Controller {
 	 */
 	public function signup() {
 		$user_model = $this->load_model('UserModel');
+		$measurement_model = $this->load_model('MeasurementModel');
 		
 		$user = $user_model->insertUser($this->params['email'], $this->params['password']);
 
 		if($user !== null){
+			//add the weight measurement by default for each registered user
+			$result = $measurement_model->addMeasurement($user['id'], 'Тегло', 1);
+
+			setcookie(session_name(), session_id(), strtotime('+30 days'), '/');
+			$_SESSION['user'] = $user;
 			$this->sendResponse(1, array('success' => true, 'user' => $user));
 		}else{
 			$this->sendResponse(0, ErrorCodes::DB_ERROR);
