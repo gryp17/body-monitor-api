@@ -10,7 +10,7 @@ class Measurement extends Controller {
 		 */
 		$this->endpoints = array(
 			'getUnits' => array(
-				'required_role' => self::LOGGED_IN_USER
+				'required_role' => self::PUBLIC_ACCESS
 			),
 			'getMeasurements' => array(
 				'required_role' => self::LOGGED_IN_USER
