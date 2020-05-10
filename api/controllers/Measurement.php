@@ -22,12 +22,10 @@ class Measurement extends Controller {
 					'type' => array('required', 'int')
 				)
 			),
-			'addMeasurementEntry' => array(
+			'addMeasurementEntries' => array(
 				'required_role' => self::LOGGED_IN_USER,
 				'params' => array(
-					'measurementId' => array('required', 'int'),
-					'date' => 'datetime',
-					'value' => 'number'
+					'date' => 'datetime'
 				)
 			),
 			'deleteMeasurementEntry' => array(
@@ -85,26 +83,43 @@ class Measurement extends Controller {
 
 	}
 
-	public function addMeasurementEntry() {
+	public function addMeasurementEntries() {
 		$measurement_model = $this->load_model('MeasurementModel');
 		$measurement_entry_model = $this->load_model('MeasurementEntryModel');
-		$measurement_id = $this->params['measurementId'];
 
 		$measurements = $measurement_model->getMeasurements($_SESSION['user']['id']);
 
-		//check if the measurementId is valid
-		$index = array_search($measurement_id, array_column($measurements, 'id'));
+		$error = null;
 
-		if ($index === false) {
-			$this->sendResponse(0, array('field' => 'measurementId', 'error_code' => ErrorCodes::EMPTY_FIELD));
-		} else {
-			$result = $measurement_entry_model->addMeasurementEntry($measurement_id, $this->params['date'], $this->params['value']);
+		//check if all the values are valid
+		foreach ($this->params['values'] as $measurement_id => $value) {
+			//check if it's a valid number
+			$validationResult = Validator::checkParam($measurement_id, $value, array('number'), array());
 
-			if($result) {
-				$this->sendResponse(1, array('entry' => $result));
-			} else {
-				$this->sendResponse(0, ErrorCodes::DB_ERROR);
+			if ($validationResult !== true) {
+				$error = $validationResult;
+				break;
 			}
+
+			//check if the measurement_id exists and belongs to the logged in user
+			$index = array_search($measurement_id, array_column($measurements, 'id'));
+
+			if ($index === false) {
+				$error = ErrorCodes::ACCESS_DENIED;
+				break;
+			}
+		}
+
+		if (isset($error)) {
+			$this->sendResponse(0, $error);
+		} else {
+			$entries = array();
+
+			foreach ($this->params['values'] as $measurement_id => $value) {
+				$entries[] = $measurement_entry_model->addMeasurementEntry($measurement_id, $this->params['date'], $value);
+			}
+
+			$this->sendResponse(1, array('entries' => $entries));
 		}
 	}
 

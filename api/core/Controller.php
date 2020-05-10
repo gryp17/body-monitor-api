@@ -43,7 +43,9 @@ class Controller {
 		#extract all request params
 		foreach ($request_data as $key => $value) {
 			$key = trim($key);
-			$value = trim($value);
+			if (!is_array($value)) {
+				$value = trim($value);
+			}
 			$params[$key] = $value;
 		}
 
