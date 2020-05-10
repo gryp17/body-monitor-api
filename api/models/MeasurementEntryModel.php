@@ -8,6 +8,13 @@ class MeasurementEntryModel {
 		$this->connection = DB::getInstance()->connection;
 	}
 
+	/**
+	 * Adds new measurement entry
+	 * @param int $measurement_id
+	 * @param string $date
+	 * @param int $value
+	 * @return array
+	 */
 	public function addMeasurementEntry($measurement_id, $date, $value) {
 		$query = $this->connection->prepare('INSERT INTO measurement_entry (measurement_id, date, value) VALUES (:measurement_id, :date, :value)');
 		$params = array(
@@ -24,6 +31,11 @@ class MeasurementEntryModel {
 		}
 	}
 
+	/**
+	 * Gets the measurement entry by id
+	 * @param int $id
+	 * @return array
+	 */
 	public function getMeasurementEntry($id) {
 		$query = $this->connection->prepare('SELECT * FROM measurement_entry WHERE id = :id');
 		$params = array('id' => $id);
@@ -40,12 +52,22 @@ class MeasurementEntryModel {
 		}
 	}
 
+	/**
+	 * Deletes a measurement entry
+	 * @param int $id
+	 * @return boolean
+	 */
 	public function deleteMeasurementEntry($id) {
 		$query = $this->connection->prepare('DELETE FROM measurement_entry WHERE id = :id');
 		$params = array('id' => $id);
 		return $query->execute($params);
 	}
 
+	/**
+	 * Returns all measurement entries for the specified user
+	 * @param int $user_id
+	 * @return array
+	 */
 	public function getMeasurementEntries($user_id) {
 		$data = array();
 

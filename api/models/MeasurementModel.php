@@ -29,6 +29,13 @@ class MeasurementModel {
         return $data;
 	}
 
+	/**
+	 * Adds new measurement
+	 * @param int $user_id
+	 * @param string $name
+	 * @param int $unit_id
+	 * @return boolean
+	 */
 	public function addMeasurement($user_id, $name, $unit_id) {
 		$query = $this->connection->prepare('INSERT INTO measurement (user_id, unit_id, name) VALUES (:user_id, :unit_id, :name)');
 		$params = array(

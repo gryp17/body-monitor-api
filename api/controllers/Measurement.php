@@ -47,18 +47,27 @@ class Measurement extends Controller {
 		
 	}
 
+	/**
+	 * Returns all measurement units
+	 */
 	public function getUnits() {
 		$measurement_unit_model = $this->load_model('MeasurementUnitModel');
 		$data = $measurement_unit_model->getMeasurementUnits();
 		$this->sendResponse(1, $data);
 	}
 
+	/**
+	 * Returns all user measurements
+	 */
 	public function getMeasurements() {
 		$measurement_model = $this->load_model('MeasurementModel');
 		$data = $measurement_model->getMeasurements($_SESSION['user']['id']);
 		$this->sendResponse(1, $data);
 	}
 
+	/**
+	 * Adds new measurement
+	 */
 	public function addMeasurement() {
 		$measurement_model = $this->load_model('MeasurementModel');
 		$measurement_unit_model = $this->load_model('MeasurementUnitModel');
@@ -83,6 +92,9 @@ class Measurement extends Controller {
 
 	}
 
+	/**
+	 * Adds new measurement entries
+	 */
 	public function addMeasurementEntries() {
 		$measurement_model = $this->load_model('MeasurementModel');
 		$measurement_entry_model = $this->load_model('MeasurementEntryModel');
@@ -123,6 +135,9 @@ class Measurement extends Controller {
 		}
 	}
 
+	/**
+	 * Deletes a measurement entry
+	 */
 	public function deleteMeasurementEntry() {
 		$measurement_model = $this->load_model('MeasurementModel');
 		$measurement_entry_model = $this->load_model('MeasurementEntryModel');
@@ -144,6 +159,9 @@ class Measurement extends Controller {
 		}
 	}
 
+	/**
+	 * Gets all user measurement entries
+	 */
 	public function getMeasurementEntries() {
 		$measurement_entry_model = $this->load_model('MeasurementEntryModel');
 		$data = $measurement_entry_model->getMeasurementEntries($_SESSION['user']['id']);
