@@ -16,7 +16,7 @@ class UserModel {
 	 * @return boolean
 	 */
 	public function checkLogin($email, $password) {		
-		$query = $this->connection->prepare('SELECT * FROM user WHERE email = :email AND password = :password');
+		$query = $this->connection->prepare('SELECT * FROM body_user WHERE email = :email AND password = :password');
 		$params = array('email' => $email, 'password' => md5($password));
 		$query->execute($params);
 
@@ -46,10 +46,10 @@ class UserModel {
 			return true;
 		}else{
 			if($field === 'username'){
-				$query = $this->connection->prepare('select * from user where username = :username');
+				$query = $this->connection->prepare('select * from body_user where username = :username');
 				$query->execute(array('username' => $value));
 			}else{
-				$query = $this->connection->prepare('select * from user where email = :email');
+				$query = $this->connection->prepare('select * from body_user where email = :email');
 				$query->execute(array('email' => $value));
 			}
 			
@@ -71,7 +71,7 @@ class UserModel {
 	 */
 	public function insertUser($email, $password){
 		$password = md5($password);
-		$query = $this->connection->prepare('INSERT INTO user '
+		$query = $this->connection->prepare('INSERT INTO body_user '
 				. '(password, email, registered) '
 				. 'VALUES '
 				. '(:password, :email, now())');
@@ -95,7 +95,7 @@ class UserModel {
 	 * @return array
 	 */
 	public function getUser($id){
-		$query = $this->connection->prepare('SELECT * FROM user WHERE id = :id');
+		$query = $this->connection->prepare('SELECT * FROM body_user WHERE id = :id');
 		$params = array('id' => $id);
 		$query->execute($params);
 

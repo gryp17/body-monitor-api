@@ -1,6 +1,8 @@
 Options -MultiViews
 RewriteEngine On
 
+DirectoryIndex index.html index.php
+
 #change the base when moving to another domain
 RewriteBase /body-monitor-api
 
